@@ -45,5 +45,5 @@ return await bcrypt.compare(password,this.password)
 userSchema.statics.hashpassword = async function(password){
     return await bcrypt.hash(password,10);
 }
-const userModel = mongoose.model('users',userSchema);
+const userModel = mongoose.model('Uber-users',userSchema);
 module.exports = userModel
