@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports.getAddressCoordinates = async (address) => {
-    const apiKey = "AIzaSyBIBso-pbROOCugl11uJNtgJoRtWRGptu4"; // Enclose the key in quotes
+    const apiKey = process.env.GOOGLE_MAP_API; // Enclose the key in quotes
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
     
     try {
@@ -19,5 +19,31 @@ module.exports.getAddressCoordinates = async (address) => {
     } catch (error) {
         console.error("Error fetching coordinates:", error.message || error);
         throw error;
+    }
+};
+
+
+module.exports.getAutoCompleteSuggestions = async (input) => {
+    if (!input) {
+        throw new Error('Address is required');
+    }
+
+    const apiKey = process.env.GOOGLE_MAP_API;
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
+
+    console.log("Fetching from Google API:", url);
+
+    try {
+        const response = await axios.get(url); // Set a timeout of 10s
+        console.log("Google API Response:", response.data);
+
+        if (response.data.status === 'OK') {
+            return response.data.predictions;
+        } else {
+            throw new Error(`Google API Error: ${response.data.status}`);
+        }
+    } catch (err) {
+        console.error("Google API request failed:", err.message);
+        throw err;
     }
 };

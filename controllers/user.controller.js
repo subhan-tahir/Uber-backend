@@ -7,18 +7,37 @@ module.exports.registerUser = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-    console.log(req.body);
+    //Extract data from the request
     const { fullname, email, password } = req.body;
-    const hashpassword = await userModel.hashpassword(password);
-    //save user on the database
-    const user = await userService.createUser({
-        firstname: fullname.firstname,
-        lastname: fullname.lastname,
-        email,
-        password: hashpassword
-    });
-    const token = user.generateAuthToken();
-    res.status(201).json({ token, user });
+    console.log(req.body);
+    try{
+        // Check if email already exists
+        let exist = await userModel.findOne({ email });
+        if (exist) {
+            return res.status(400).json({ success: false, message: "Email already exists" });
+        }
+
+        //Hash the password
+        const hashpassword = await userModel.hashpassword(password);
+``
+        //save user on the database
+        const user = await userService.createUser({
+            firstname: fullname.firstname,
+            lastname: fullname.lastname,
+            email,
+            password: hashpassword
+        });
+        //user created successfuly
+        
+            const token = user.generateAuthToken();
+            res.json({message:'Signed up Succesfully',token ,user})
+        
+        
+    }
+    catch(error){
+        console.error('Siguup error:',error)
+    }
+
 }
 
 module.exports.loginUser = async (req, res, next) => {
