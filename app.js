@@ -11,7 +11,7 @@ const mapRoutes = require('./routes/maps.routes')
 const rideRoutes = require('./routes/ride.routes')
 connectDB();
 
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({ origin: '*',methods: ['GET', 'POST'],  credentials: true }));
 
 //express.json is a Middleware to parse JSON data in the request body
 app.use(express.json());
