@@ -54,13 +54,13 @@ module.exports.loginUser = async (req, res, next) => {
         // Check if the user exists
         const user = await userModel.findOne({ email }).select('+password');
         if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Email does not exist please create an account' });
         }
 
         // Verify password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid password' });
         }
 
         // Generate authentication token
