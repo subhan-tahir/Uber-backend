@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const userModel = require("../models/user.model");
-const userService = require('../services/user.service')
+const userService = require('../services/user.service');
+const emailHandler = require("./email.controller");
 
 module.exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req);
@@ -9,7 +10,6 @@ module.exports.registerUser = async (req, res, next) => {
     }
     //Extract data from the request
     const { fullname, email, password } = req.body;
-    console.log(req.body);
     try{
         // Check if email already exists
         let exist = await userModel.findOne({ email });
@@ -53,6 +53,8 @@ module.exports.loginUser = async (req, res, next) => {
         console.log(req.body)
         // Check if the user exists
         const user = await userModel.findOne({ email }).select('+password');
+        const userName = user.fullname.firstname;
+        const userEmail = user.email;
         if (!user) {
             return res.status(401).json({ message: 'Email does not exist please create an account' });
         }
@@ -65,6 +67,9 @@ module.exports.loginUser = async (req, res, next) => {
 
         // Generate authentication token
         const token = user.generateAuthToken();
+
+        //send email
+        emailHandler(userName,userEmail);
 
         // Respond with token and user data
         res.status(200).json({ token, user ,message:'User logged in successfully'});
