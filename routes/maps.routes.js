@@ -4,6 +4,9 @@ const router = express.Router();
 const { query } = require('express-validator');
 const { getCoordinates, getDistanceTime, getSuggestions } = require('../controllers/maps.controller');
 const { getAutoCompleteSuggestions } = require('../services/maps.service');
+
+
+
 router.get('/get-coordinates',
     query('address').isString().isLength({ min: 3 }),
     authUSer,
@@ -30,7 +33,7 @@ router.get(
             res.status(200).json(distanceTime);
         } catch (error) {
             console.error("❌ Error fetching distance and time:", error);
-            res.status(500).json({ message: 'Internal Server Error' });
+            res.status(500).json({ message: 'Internal Serverasdasd Error' });
         }
     }
 );
@@ -41,11 +44,15 @@ router.get('/get-suggestions',
     async (req, res) => {
         try {
             const { input } = req.query;
+            console.log(input);
             const inputSuggestion = await getSuggestions(input);
             res.status(200).json(inputSuggestion);
-        } catch (error) {
+
+        } 
+        
+        catch (error) {
             console.error("❌ Error fetching distance and time:", error);
-            res.status(500).json({ message: 'Internal Server Error' });
+            res.status(500).json({ message: 'Internal Server assadasddasd Error', error: error.message });
         }
     }
 )

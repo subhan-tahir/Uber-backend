@@ -1,7 +1,8 @@
 const { validationResult } = require("express-validator");
-const userModel = require("../models/user.model");
+// const userModel = require("../models/user.model");
 const userService = require('../services/user.service');
 const emailHandler = require("./email.controller");
+const { userModel } = require("../models/user.model");
 
 module.exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req);

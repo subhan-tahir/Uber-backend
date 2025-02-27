@@ -14,15 +14,17 @@ connectDB();
 app.use(cors({ origin: '*',methods: ['GET', 'POST'],  credentials: true }));
 
 //express.json is a Middleware to parse JSON data in the request body
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+// app.use(express.json());
+// app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
-
+app.use(express.json({ limit: "10mb" }));  // Adjust as needed
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.get('/',(req,res)=>{
     res.send('Hello World'); 
     
 });
 app.use('/maps',mapRoutes);
+// app.use('/maps/get-suggestions')
 app.use('/Uber-users',userRoutes);
 app.use('/login',userRoutes);
 app.use('/rides',rideRoutes);

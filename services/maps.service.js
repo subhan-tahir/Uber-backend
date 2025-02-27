@@ -10,7 +10,7 @@ module.exports.getAddressCoordinates = async (address) => {
         if (response.data.status === 'OK') {
             const location = response.data.results[0].geometry.location; // Corrected property access
             return {
-                lat: location.lat, // Changed 'ltd' to 'lat'
+                lat: location.lat,
                 lng: location.lng
             };
         } else {

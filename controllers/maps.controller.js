@@ -57,8 +57,8 @@ module.exports.getSuggestions = async (input) => {
         // res.status(200).json({message:"Suggestion api hit successful"});
         return suggestions
     } catch (error) {
-        console.error("❌ Internal server error:", error.message);
+        console.error("❌ Internal sdfsdfsderver error:", error.message);
         // res.status(500).json({ message: "Internal server error" });
-        return  "Internal server error" ;
+        return "Asdasd" ;
     }
 };
