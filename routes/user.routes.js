@@ -56,15 +56,10 @@ router.post("/user-profile", async (req, res) => {
 });
 
 
-
-
-
-
 router.get("/get-profile/:userId", async (req, res) => { 
     try {
         const userId = req.params.userId; 
-        console.log("User ID:", userId); 
-
+        
         if (!userId) {
             return res.status(400).json({ error: "User ID is required" });
         }

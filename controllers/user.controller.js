@@ -11,7 +11,9 @@ module.exports.registerUser = async (req, res, next) => {
     }
     //Extract data from the request
     const { fullname, email, password } = req.body;
-    try{
+    console.log(req.body)
+    try {
+
         // Check if email already exists
         let exist = await userModel.findOne({ email });
         if (exist) {
@@ -20,23 +22,27 @@ module.exports.registerUser = async (req, res, next) => {
 
         //Hash the password
         const hashpassword = await userModel.hashpassword(password);
-``
+        
         //save user on the database
-        const user = await userService.createUser({
-            firstname: fullname.firstname,
-            lastname: fullname.lastname,
+        const user = await userModel.create({
+
+            fullname: {
+                firstname: fullname.firstname,
+                lastname: fullname.lastname
+            },
+
+
             email,
             password: hashpassword
         });
         //user created successfuly
-        
-            const token = user.generateAuthToken();
-            res.json({message:'Signed up Succesfully',token ,user})
-        
-        
+
+        const token = user.generateAuthToken();
+        res.json({ message: 'Signed up Succesfully', token, user })
     }
-    catch(error){
-        console.error('Siguup error:',error)
+    catch (error) {
+        console.error('Signup error:', error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 
 }
@@ -54,6 +60,7 @@ module.exports.loginUser = async (req, res, next) => {
         console.log(req.body)
         // Check if the user exists
         const user = await userModel.findOne({ email }).select('+password');
+
         const userName = user.fullname.firstname;
         const userEmail = user.email;
         if (!user) {
@@ -70,20 +77,17 @@ module.exports.loginUser = async (req, res, next) => {
         const token = user.generateAuthToken();
 
         //send email
-        emailHandler(userName,userEmail);
+        emailHandler(userName, userEmail);
 
         // Respond with token and user data
-        res.status(200).json({ token, user ,message:'User logged in successfully'});
-       
+        res.status(200).json({ token, user, message: 'User logged in successfully' });
+
     } catch (error) {
         // Handle unexpected errors
         console.error('Error during login:', error);
-        res.status(500).json({ message: 'Server error, please try again later.' });
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
-module.exports.getUserProfile = async (req, res, next) => {
-    res.status(200).json(req.user);
-}
 
 module.exports.logoutUser = async (req, res, next) => {
     res.clearCookie('token');

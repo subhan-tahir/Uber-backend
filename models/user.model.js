@@ -37,16 +37,19 @@ const userSchema = new mongoose.Schema({
 })
 
 // const profileSchema = new mongoose.Schema({
-  
+
 // });
 
 
 userSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET)
+    //this._id refers to the user's ID in MongoDB.
+    console.log('user id get from mongoDB in current user collection',{id:this._id})
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
     return token;
 }
 //compare for login user
 userSchema.methods.comparePassword = async function (password) {
+    //bcrypt.compare take two parameters one is plain text password and second is hashed password
     return await bcrypt.compare(password, this.password)
 }
 //hash for register user
